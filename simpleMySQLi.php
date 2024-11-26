@@ -373,7 +373,7 @@ class simpleMySQLi
     {
         if (is_array($data)) {
             return array_map(function($val) { return is_string($val) ? stripcslashes($val) : $val; }, $data);
-        } else if (is_object($val)) {
+        } else if (is_object($data)) {
             return (object)array_map(function($val) { return is_string($val) ? stripcslashes($val) : $val; }, (array)$data);
         } else if (is_string($data)) {
             return stripcslashes($data);
