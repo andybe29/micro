@@ -55,7 +55,7 @@ class ProximaHttp
         CURLOPT_FOLLOWLOCATION  => true,
         CURLOPT_RETURNTRANSFER  => true,
         CURLOPT_CONNECTTIMEOUT  => 5,
-        CURLOPT_TIMEOUT         => 5,
+        CURLOPT_TIMEOUT         => 30,
     ];
 
     const URL = 'https://last.fm';
