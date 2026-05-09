@@ -4,33 +4,44 @@
  */
 class JulianDay
 {
-    # Converts Unix timestamp to Julian Day
-    # unixtojd
-    public static function _utime2jday($value = null) {
+    /**
+     * Перевод метки времени Unix в юлианский день (unixtojd)
+     * @param int $value метка времени Unix для преобразования либо null (текущий момент)
+     * @return mixed число дней в юлианском летоисчислении или false, если возникла ошибка
+     */
+    public static function _utime2jday($value = null)
+    {
         $value = (null === $value) ? time() : (int)$value;
         $value = getdate($value);
 
         return self::_gcal2jday($value['mon'], $value['mday'], $value['year']);
     }
 
-    # Converts a Gregorian Calendar date to Julian Day
-    # GregorianToJD
-    public static function _gcal2jday($month, $day, $year) {
-        if (checkdate($month, $day, $year)) {
-            $a = floor((14 - $month) / 12);
-            $y = floor($year + 4800 - $a);
-            $m = floor($month + 12 * $a - 3);
-            return $day + floor((153 * $m + 2) / 5) + $y * 365 + floor($y / 4) - floor($y / 100) + floor($y / 400) - 32045;
-        }
+    /**
+     * Преобразование даты по григорианскому календарю в количество дней в юлианском летоисчислении (gregoriantojd)
+     * @param int $month месяц
+     * @param int $day   день
+     * @param int $year  год
+     * @return mixed число дней в юлианском летоисчислении или false, если возникла ошибка
+     */
+    public static function _gcal2jday(int $month, int $day, int $year)
+    {
+        if (!checkdate($month, $day, $year)) return false;
 
-        return false;
+        $a = floor((14 - $month) / 12);
+        $y = floor($year + 4800 - $a);
+        $m = floor($month + 12 * $a - 3);
+
+        return $day + floor((153 * $m + 2) / 5) + $y * 365 + floor($y / 4) - floor($y / 100) + floor($y / 400) - 32045;
     }
 
-    # Converts Julian Day to Unix timestamp
-    # jdtounix
-    public static function _jday2utime($value = null) {
-        if (null === $value or !is_int($value)) return false;
-
+    /**
+     * Перевод числа дней в юлианском летоисчислении в метку времени Unix (jdtounix)
+     * @param int $value номер дня в юлианском летоисчислении
+     * @return int метка времени Unix на момент начала (полночь) юлианского дня
+     */
+    public static function _jday2utime(int $value)
+    {
         $l = $value + 68569;
         $n = self::_aint((4 * $l) / 146097);
         $l = $l - self::_aint((146097 * $n + 3) / 4);
@@ -48,7 +59,8 @@ class JulianDay
         return mktime(0, 0, 0, $month, $day, $year);
     }
 
-    public static function _aint($value) {
+    public static function _aint(int $value)
+    {
         return ($value > 0) ? floor($value) : ceil($value);
     }
 }
